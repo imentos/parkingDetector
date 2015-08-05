@@ -1,5 +1,10 @@
 #define trigPin 3
 #define echoPin 2
+#define distanceToCar 5
+#define distanceIgnore 4
+#define alertTimer 10
+
+int alertCount = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -17,9 +22,6 @@ long microsecondsToInches(long microseconds)
 // See: http://www.parallax.com/dl/docs/prod/acc/28015-PI...
 return microseconds / 74 / 2;
 }
-
-#define distanceToCar 5
-#define distanceIgnore 4
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -39,6 +41,15 @@ void loop() {
 
   Serial.println(distance);  
   if (distance > distanceToCar) {
-    Serial.println("Car moved");    
+    Serial.println("Car moved");
+
+    if (alertCount == 0) {
+      Serial.println("***Send Alert");
+    }
+    if (alertCount++ > alertTimer) {      
+      alertCount = 0;
+    }    
+  } else {
+      alertCount = 0;
   }
 }
