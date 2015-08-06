@@ -1,8 +1,9 @@
-#define trigPin 3
-#define echoPin 2
+#define trigPin 10
+#define echoPin 11
 #define distanceToCar 5
 #define distanceIgnore 4
 #define alertTimer 10
+#define alertPin 5
 
 int alertCount = 0;
 
@@ -10,6 +11,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(trigPin, OUTPUT);
+  pinMode(alertPin, OUTPUT);
   pinMode(echoPin, INPUT);
 }
 
@@ -36,6 +38,7 @@ void loop() {
   
   if (distance < distanceIgnore) {
     Serial.println("Ignored");
+    digitalWrite(alertPin, LOW);
     return;
   }
 
@@ -45,9 +48,13 @@ void loop() {
 
     if (alertCount == 0) {
       Serial.println("***Send Alert");
+      digitalWrite(alertPin, HIGH);
+    } else {
+        digitalWrite(alertPin, LOW);
     }
     if (alertCount++ > alertTimer) {      
       alertCount = 0;
+      
     }    
   } else {
       alertCount = 0;
